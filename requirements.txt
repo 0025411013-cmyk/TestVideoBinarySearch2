@@ -1,4 +1,14 @@
-# Requirements for Binary Search Video Audio Generation
+# Requirements for Binary Search Video Project
+# =============================================
+
+# =============================================================================
+# MANIM - Video Animation (Main Visualization Tool)
+# =============================================================================
+manim>=0.18.0
+
+# =============================================================================
+# AUDIO GENERATION
+# =============================================================================
 
 # For high-quality Kokoro TTS (requires internet for first run)
 kokoro>=0.9.0
@@ -7,3 +17,21 @@ numpy>=1.24.0
 
 # For offline espeak-ng fallback (requires espeak-ng system package)
 # sudo apt-get install espeak-ng
+
+# =============================================================================
+# SYSTEM DEPENDENCIES (install separately)
+# =============================================================================
+# For Manim:
+#   - FFmpeg: sudo apt-get install ffmpeg
+#   - LaTeX (optional): sudo apt-get install texlive texlive-latex-extra
+#   - Cairo: usually installed with manim
+
+# =============================================================================
+# INSTALLATION
+# =============================================================================
+# pip install -r requirements.txt
+# 
+# To render video:
+#   Development: manim -pql binary_search_visual.py IntroductionScene
+#   High Quality: manim -pqh binary_search_visual.py BinarySearchComplete
+#   4K Final: manim -pqk binary_search_visual.py BinarySearchComplete
