@@ -1,0 +1,941 @@
+{
+  "metadata": {
+    "title": "How Binary Search Actually Works - Visualized",
+    "voice": "espeak-ng (en-us) - Placeholder for Kokoro af_bella",
+    "target_voice": "kokoro/af_bella",
+    "language": "en-US",
+    "sample_rate": 22050,
+    "total_duration_seconds": 577.817,
+    "total_duration_formatted": "9:37",
+    "audio_file": "binary_search_narration.wav",
+    "note": "Timestamps are designed for Kokoro TTS af_bella voice. Current audio uses espeak-ng as fallback due to network restrictions. Re-run with Kokoro locally for production quality."
+  },
+  "sections": [
+    {
+      "section": "INTRODUCTION",
+      "section_index": 0,
+      "start_time": 0.0,
+      "end_time": 68.922,
+      "duration": 68.922,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "text": "Imagine you're looking for a word in a dictionary.",
+          "start_time": 0.0,
+          "end_time": 3.506,
+          "duration": 3.506
+        },
+        {
+          "sentence_index": 1,
+          "text": "Not just any dictionary—one with fifty thousand words.",
+          "start_time": 3.506,
+          "end_time": 7.292,
+          "duration": 3.786
+        },
+        {
+          "sentence_index": 2,
+          "text": "You could start at the very first page and flip through one by one until you find it.",
+          "start_time": 7.292,
+          "end_time": 13.252,
+          "duration": 5.96
+        },
+        {
+          "sentence_index": 3,
+          "text": "But that would take forever, wouldn't it?",
+          "start_time": 13.252,
+          "end_time": 16.126,
+          "duration": 2.875
+        },
+        {
+          "sentence_index": 4,
+          "text": "Here's the thing: nobody actually does that.",
+          "start_time": 16.126,
+          "end_time": 19.211,
+          "duration": 3.085
+        },
+        {
+          "sentence_index": 5,
+          "text": "Instead, you open the dictionary somewhere in the middle, see where you are, and then decide whether to go forward or backward.",
+          "start_time": 19.211,
+          "end_time": 28.116,
+          "duration": 8.905
+        },
+        {
+          "sentence_index": 6,
+          "text": "And without even thinking about it, you've just used one of the most elegant and powerful ideas in all of computer science.",
+          "start_time": 28.116,
+          "end_time": 36.74,
+          "duration": 8.624
+        },
+        {
+          "sentence_index": 7,
+          "text": "This is binary search.",
+          "start_time": 36.74,
+          "end_time": 38.282,
+          "duration": 1.543
+        },
+        {
+          "sentence_index": 8,
+          "text": "At first glance, it might seem almost too simple to be interesting.",
+          "start_time": 38.282,
+          "end_time": 42.98,
+          "duration": 4.698
+        },
+        {
+          "sentence_index": 9,
+          "text": "You're just cutting things in half, over and over again.",
+          "start_time": 42.98,
+          "end_time": 46.906,
+          "duration": 3.926
+        },
+        {
+          "sentence_index": 10,
+          "text": "But there's something remarkable hiding beneath that simplicity—something that reveals a deep truth about how we can dramatically speed up the process of finding things.",
+          "start_time": 46.906,
+          "end_time": 58.756,
+          "duration": 11.849
+        },
+        {
+          "sentence_index": 11,
+          "text": "Today, I want to show you not just what binary search does, but why it works so beautifully, and why that matters far more than you might expect.",
+          "start_time": 58.756,
+          "end_time": 68.922,
+          "duration": 10.167
+        }
+      ]
+    },
+    {
+      "section": "THE_PROBLEM_LINEAR_SEARCH",
+      "section_index": 1,
+      "start_time": 69.422,
+      "end_time": 147.263,
+      "duration": 77.84,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "text": "Let's start with a concrete problem.",
+          "start_time": 69.422,
+          "end_time": 72.081,
+          "duration": 2.659
+        },
+        {
+          "sentence_index": 1,
+          "text": "Say you have a sorted list of one million numbers, and you want to find a specific value—let's call it target.",
+          "start_time": 72.081,
+          "end_time": 80.205,
+          "duration": 8.124
+        },
+        {
+          "sentence_index": 2,
+          "text": "The most straightforward approach?",
+          "start_time": 80.205,
+          "end_time": 82.716,
+          "duration": 2.511
+        },
+        {
+          "sentence_index": 3,
+          "text": "Start at the beginning and check each element one by one.",
+          "start_time": 82.716,
+          "end_time": 86.925,
+          "duration": 4.21
+        },
+        {
+          "sentence_index": 4,
+          "text": "This is called linear search, and it works perfectly fine.",
+          "start_time": 86.925,
+          "end_time": 91.209,
+          "duration": 4.283
+        },
+        {
+          "sentence_index": 5,
+          "text": "But here's the catch: in the worst case, you might need to check all one million numbers before finding what you're looking for.",
+          "start_time": 91.209,
+          "end_time": 100.662,
+          "duration": 9.453
+        },
+        {
+          "sentence_index": 6,
+          "text": "Or worse—you check everything only to discover the number isn't there at all.",
+          "start_time": 100.662,
+          "end_time": 106.348,
+          "duration": 5.687
+        },
+        {
+          "sentence_index": 7,
+          "text": "Now, one million comparisons might sound manageable for a computer.",
+          "start_time": 106.348,
+          "end_time": 111.297,
+          "duration": 4.948
+        },
+        {
+          "sentence_index": 8,
+          "text": "But what if you had a billion entries?",
+          "start_time": 111.297,
+          "end_time": 114.103,
+          "duration": 2.806
+        },
+        {
+          "sentence_index": 9,
+          "text": "Ten billion?",
+          "start_time": 114.103,
+          "end_time": 114.989,
+          "duration": 0.886
+        },
+        {
+          "sentence_index": 10,
+          "text": "And what if you needed to perform this search thousands of times per second?",
+          "start_time": 114.989,
+          "end_time": 120.602,
+          "duration": 5.613
+        },
+        {
+          "sentence_index": 11,
+          "text": "This is where things get interesting.",
+          "start_time": 120.602,
+          "end_time": 123.335,
+          "duration": 2.733
+        },
+        {
+          "sentence_index": 12,
+          "text": "Because binary search doesn't just make this faster—it makes it dramatically faster.",
+          "start_time": 123.335,
+          "end_time": 129.538,
+          "duration": 6.204
+        },
+        {
+          "sentence_index": 13,
+          "text": "So much faster that it almost feels like cheating.",
+          "start_time": 129.538,
+          "end_time": 133.231,
+          "duration": 3.693
+        },
+        {
+          "sentence_index": 14,
+          "text": "With binary search on one million sorted elements, you'll find your answer in at most...",
+          "start_time": 133.231,
+          "end_time": 139.73,
+          "duration": 6.499
+        },
+        {
+          "sentence_index": 15,
+          "text": "twenty comparisons.",
+          "start_time": 139.73,
+          "end_time": 141.133,
+          "duration": 1.403
+        },
+        {
+          "sentence_index": 16,
+          "text": "Let that sink in.",
+          "start_time": 141.133,
+          "end_time": 142.388,
+          "duration": 1.255
+        },
+        {
+          "sentence_index": 17,
+          "text": "Not one million.",
+          "start_time": 142.388,
+          "end_time": 143.57,
+          "duration": 1.182
+        },
+        {
+          "sentence_index": 18,
+          "text": "Not one thousand.",
+          "start_time": 143.57,
+          "end_time": 144.826,
+          "duration": 1.255
+        },
+        {
+          "sentence_index": 19,
+          "text": "Twenty.",
+          "start_time": 144.826,
+          "end_time": 145.343,
+          "duration": 0.517
+        },
+        {
+          "sentence_index": 20,
+          "text": "How is that even possible?",
+          "start_time": 145.343,
+          "end_time": 147.263,
+          "duration": 1.92
+        }
+      ]
+    },
+    {
+      "section": "THE_CORE_INSIGHT_POWER_OF_HALVING",
+      "section_index": 2,
+      "start_time": 147.763,
+      "end_time": 239.135,
+      "duration": 91.372,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "text": "The secret lies in a simple but profound observation: when you make a single comparison in a sorted list, you don't just eliminate one possibility—you eliminate half of all remaining possibilities.",
+          "start_time": 147.763,
+          "end_time": 162.244,
+          "duration": 14.481
+        },
+        {
+          "sentence_index": 1,
+          "text": "Here's how it works.",
+          "start_time": 162.244,
+          "end_time": 163.714,
+          "duration": 1.47
+        },
+        {
+          "sentence_index": 2,
+          "text": "You look at the middle element.",
+          "start_time": 163.714,
+          "end_time": 165.993,
+          "duration": 2.279
+        },
+        {
+          "sentence_index": 3,
+          "text": "If it's exactly what you're looking for, great—you're done.",
+          "start_time": 165.993,
+          "end_time": 170.33,
+          "duration": 4.337
+        },
+        {
+          "sentence_index": 4,
+          "text": "But even if it's not, you've learned something incredibly valuable.",
+          "start_time": 170.33,
+          "end_time": 175.255,
+          "duration": 4.925
+        },
+        {
+          "sentence_index": 5,
+          "text": "If your target is smaller than the middle element, you know—with absolute certainty—that it cannot be in the upper half of the list.",
+          "start_time": 175.255,
+          "end_time": 184.959,
+          "duration": 9.703
+        },
+        {
+          "sentence_index": 6,
+          "text": "So you throw away that entire half and focus only on what remains.",
+          "start_time": 184.959,
+          "end_time": 189.81,
+          "duration": 4.852
+        },
+        {
+          "sentence_index": 7,
+          "text": "And here's the beautiful part: you do the exact same thing again.",
+          "start_time": 189.81,
+          "end_time": 194.588,
+          "duration": 4.778
+        },
+        {
+          "sentence_index": 8,
+          "text": "Look at the middle of the remaining section.",
+          "start_time": 194.588,
+          "end_time": 197.823,
+          "duration": 3.234
+        },
+        {
+          "sentence_index": 9,
+          "text": "Compare.",
+          "start_time": 197.823,
+          "end_time": 198.411,
+          "duration": 0.588
+        },
+        {
+          "sentence_index": 10,
+          "text": "Eliminate half.",
+          "start_time": 198.411,
+          "end_time": 199.513,
+          "duration": 1.103
+        },
+        {
+          "sentence_index": 11,
+          "text": "Repeat.",
+          "start_time": 199.513,
+          "end_time": 200.028,
+          "duration": 0.515
+        },
+        {
+          "sentence_index": 12,
+          "text": "Each step doesn't add or subtract a constant amount from your problem.",
+          "start_time": 200.028,
+          "end_time": 205.174,
+          "duration": 5.146
+        },
+        {
+          "sentence_index": 13,
+          "text": "Each step divides your problem in half.",
+          "start_time": 205.174,
+          "end_time": 208.041,
+          "duration": 2.867
+        },
+        {
+          "sentence_index": 14,
+          "text": "And division is extraordinarily powerful.",
+          "start_time": 208.041,
+          "end_time": 211.054,
+          "duration": 3.014
+        },
+        {
+          "sentence_index": 15,
+          "text": "Think about it this way.",
+          "start_time": 211.054,
+          "end_time": 212.819,
+          "duration": 1.764
+        },
+        {
+          "sentence_index": 16,
+          "text": "If you have one million elements:\nAfter one comparison, you have at most five hundred thousand left.",
+          "start_time": 212.819,
+          "end_time": 220.17,
+          "duration": 7.351
+        },
+        {
+          "sentence_index": 17,
+          "text": "After two comparisons, two hundred fifty thousand.",
+          "start_time": 220.17,
+          "end_time": 223.845,
+          "duration": 3.675
+        },
+        {
+          "sentence_index": 18,
+          "text": "After ten comparisons, fewer than a thousand.",
+          "start_time": 223.845,
+          "end_time": 227.153,
+          "duration": 3.308
+        },
+        {
+          "sentence_index": 19,
+          "text": "After twenty comparisons, you're down to one.",
+          "start_time": 227.153,
+          "end_time": 230.461,
+          "duration": 3.308
+        },
+        {
+          "sentence_index": 20,
+          "text": "This is logarithmic behavior.",
+          "start_time": 230.461,
+          "end_time": 232.593,
+          "duration": 2.132
+        },
+        {
+          "sentence_index": 21,
+          "text": "And it's why binary search can handle massive datasets with almost effortless efficiency.",
+          "start_time": 232.593,
+          "end_time": 239.135,
+          "duration": 6.542
+        }
+      ]
+    },
+    {
+      "section": "THE_ALGORITHM_IN_ACTION",
+      "section_index": 3,
+      "start_time": 239.635,
+      "end_time": 322.226,
+      "duration": 82.591,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "text": "Let me walk you through exactly how this plays out.",
+          "start_time": 239.635,
+          "end_time": 243.307,
+          "duration": 3.672
+        },
+        {
+          "sentence_index": 1,
+          "text": "We maintain two boundaries—let's call them left and right.",
+          "start_time": 243.307,
+          "end_time": 247.484,
+          "duration": 4.176
+        },
+        {
+          "sentence_index": 2,
+          "text": "Initially, left points to the first element and right points to the last.",
+          "start_time": 247.484,
+          "end_time": 252.74,
+          "duration": 5.256
+        },
+        {
+          "sentence_index": 3,
+          "text": "These boundaries define the portion of the list where our target could still possibly exist.",
+          "start_time": 252.74,
+          "end_time": 259.365,
+          "duration": 6.625
+        },
+        {
+          "sentence_index": 4,
+          "text": "At each step, we calculate the middle position—roughly halfway between left and right.",
+          "start_time": 259.365,
+          "end_time": 265.557,
+          "duration": 6.193
+        },
+        {
+          "sentence_index": 5,
+          "text": "We then compare the element at this middle position to our target.",
+          "start_time": 265.557,
+          "end_time": 270.31,
+          "duration": 4.752
+        },
+        {
+          "sentence_index": 6,
+          "text": "If they match, we've found it.",
+          "start_time": 270.31,
+          "end_time": 272.47,
+          "duration": 2.16
+        },
+        {
+          "sentence_index": 7,
+          "text": "Search complete.",
+          "start_time": 272.47,
+          "end_time": 273.622,
+          "duration": 1.152
+        },
+        {
+          "sentence_index": 8,
+          "text": "If the target is smaller, we know it must be in the left portion.",
+          "start_time": 273.622,
+          "end_time": 278.302,
+          "duration": 4.68
+        },
+        {
+          "sentence_index": 9,
+          "text": "So we move the right boundary to just before the middle, effectively discarding the entire right half.",
+          "start_time": 278.302,
+          "end_time": 285.647,
+          "duration": 7.345
+        },
+        {
+          "sentence_index": 10,
+          "text": "If the target is larger, we do the opposite.",
+          "start_time": 285.647,
+          "end_time": 288.815,
+          "duration": 3.168
+        },
+        {
+          "sentence_index": 11,
+          "text": "We move the left boundary to just after the middle, discarding the left half.",
+          "start_time": 288.815,
+          "end_time": 294.36,
+          "duration": 5.544
+        },
+        {
+          "sentence_index": 12,
+          "text": "We keep repeating this process.",
+          "start_time": 294.36,
+          "end_time": 296.592,
+          "duration": 2.232
+        },
+        {
+          "sentence_index": 13,
+          "text": "The search space shrinks by half with each iteration—left and right drawing ever closer together.",
+          "start_time": 296.592,
+          "end_time": 303.577,
+          "duration": 6.985
+        },
+        {
+          "sentence_index": 14,
+          "text": "Eventually, either we find the target, or the boundaries cross each other, telling us the target doesn't exist in the list.",
+          "start_time": 303.577,
+          "end_time": 312.433,
+          "duration": 8.857
+        },
+        {
+          "sentence_index": 15,
+          "text": "There's an elegance to this dance of pointers.",
+          "start_time": 312.433,
+          "end_time": 315.746,
+          "duration": 3.312
+        },
+        {
+          "sentence_index": 16,
+          "text": "Each movement is purposeful.",
+          "start_time": 315.746,
+          "end_time": 317.762,
+          "duration": 2.016
+        },
+        {
+          "sentence_index": 17,
+          "text": "Each comparison carries maximum information.",
+          "start_time": 317.762,
+          "end_time": 320.93,
+          "duration": 3.168
+        },
+        {
+          "sentence_index": 18,
+          "text": "Nothing is wasted.",
+          "start_time": 320.93,
+          "end_time": 322.226,
+          "duration": 1.296
+        }
+      ]
+    },
+    {
+      "section": "THE_MATHEMATICS_LOGARITHMS",
+      "section_index": 4,
+      "start_time": 322.726,
+      "end_time": 402.812,
+      "duration": 80.086,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "text": "Let's put some precise numbers to this intuition.",
+          "start_time": 322.726,
+          "end_time": 326.662,
+          "duration": 3.936
+        },
+        {
+          "sentence_index": 1,
+          "text": "If we start with n elements, after one step we have at most n divided by two.",
+          "start_time": 326.662,
+          "end_time": 332.847,
+          "duration": 6.185
+        },
+        {
+          "sentence_index": 2,
+          "text": "After two steps, n divided by four.",
+          "start_time": 332.847,
+          "end_time": 335.659,
+          "duration": 2.811
+        },
+        {
+          "sentence_index": 3,
+          "text": "After k steps, n divided by two to the power of k.",
+          "start_time": 335.659,
+          "end_time": 339.675,
+          "duration": 4.016
+        },
+        {
+          "sentence_index": 4,
+          "text": "We want to know: how many steps until we're down to just one element?",
+          "start_time": 339.675,
+          "end_time": 345.218,
+          "duration": 5.543
+        },
+        {
+          "sentence_index": 5,
+          "text": "That's when n divided by two to the k equals one.",
+          "start_time": 345.218,
+          "end_time": 349.154,
+          "duration": 3.936
+        },
+        {
+          "sentence_index": 6,
+          "text": "Solving for k gives us k equals log base two of n.",
+          "start_time": 349.154,
+          "end_time": 353.17,
+          "duration": 4.016
+        },
+        {
+          "sentence_index": 7,
+          "text": "For one million elements, log base two of one million is approximately twenty.",
+          "start_time": 353.17,
+          "end_time": 359.436,
+          "duration": 6.265
+        },
+        {
+          "sentence_index": 8,
+          "text": "For one billion, it's about thirty.",
+          "start_time": 359.436,
+          "end_time": 362.247,
+          "duration": 2.811
+        },
+        {
+          "sentence_index": 9,
+          "text": "For a trillion, just forty.",
+          "start_time": 362.247,
+          "end_time": 364.416,
+          "duration": 2.169
+        },
+        {
+          "sentence_index": 10,
+          "text": "This is the magic of logarithmic time.",
+          "start_time": 364.416,
+          "end_time": 367.468,
+          "duration": 3.052
+        },
+        {
+          "sentence_index": 11,
+          "text": "The number of steps grows incredibly slowly compared to the size of the input.",
+          "start_time": 367.468,
+          "end_time": 373.734,
+          "duration": 6.265
+        },
+        {
+          "sentence_index": 12,
+          "text": "Double your data?",
+          "start_time": 373.734,
+          "end_time": 375.099,
+          "duration": 1.366
+        },
+        {
+          "sentence_index": 13,
+          "text": "Add just one more comparison.",
+          "start_time": 375.099,
+          "end_time": 377.429,
+          "duration": 2.329
+        },
+        {
+          "sentence_index": 14,
+          "text": "Multiply your data by a thousand?",
+          "start_time": 377.429,
+          "end_time": 380.079,
+          "duration": 2.651
+        },
+        {
+          "sentence_index": 15,
+          "text": "Add only ten more comparisons.",
+          "start_time": 380.079,
+          "end_time": 382.489,
+          "duration": 2.41
+        },
+        {
+          "sentence_index": 16,
+          "text": "Linear search says: \"Your problem is twice as big, so I need twice as much time.\"\n\nBinary search says: \"Your problem is twice as big, so I need...",
+          "start_time": 382.489,
+          "end_time": 394.217,
+          "duration": 11.728
+        },
+        {
+          "sentence_index": 17,
+          "text": "one more step.\"\n\nThat difference is the difference between algorithms that scale and algorithms that don't.",
+          "start_time": 394.217,
+          "end_time": 402.812,
+          "duration": 8.595
+        }
+      ]
+    },
+    {
+      "section": "COMMON_PITFALLS",
+      "section_index": 5,
+      "start_time": 403.312,
+      "end_time": 484.346,
+      "duration": 81.034,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "text": "Now, despite its conceptual simplicity, binary search is famously tricky to implement correctly.",
+          "start_time": 403.312,
+          "end_time": 410.339,
+          "duration": 7.027
+        },
+        {
+          "sentence_index": 1,
+          "text": "Let me highlight a few subtleties that have tripped up countless programmers.",
+          "start_time": 410.339,
+          "end_time": 415.976,
+          "duration": 5.637
+        },
+        {
+          "sentence_index": 2,
+          "text": "First, calculating the middle index.",
+          "start_time": 415.976,
+          "end_time": 418.611,
+          "duration": 2.635
+        },
+        {
+          "sentence_index": 3,
+          "text": "The naive approach—adding left and right, then dividing by two—can actually overflow for large values.",
+          "start_time": 418.611,
+          "end_time": 426.078,
+          "duration": 7.467
+        },
+        {
+          "sentence_index": 4,
+          "text": "A safer technique is to compute left plus the difference between right and left, divided by two.",
+          "start_time": 426.078,
+          "end_time": 433.105,
+          "duration": 7.027
+        },
+        {
+          "sentence_index": 5,
+          "text": "Second, the boundary updates.",
+          "start_time": 433.105,
+          "end_time": 435.228,
+          "duration": 2.123
+        },
+        {
+          "sentence_index": 6,
+          "text": "Should you set right to mid, or to mid minus one?",
+          "start_time": 435.228,
+          "end_time": 438.815,
+          "duration": 3.587
+        },
+        {
+          "sentence_index": 7,
+          "text": "Should left become mid, or mid plus one?",
+          "start_time": 438.815,
+          "end_time": 441.743,
+          "duration": 2.928
+        },
+        {
+          "sentence_index": 8,
+          "text": "Getting this wrong can lead to infinite loops where the pointers never converge, or off-by-one errors where you accidentally skip the target.",
+          "start_time": 441.743,
+          "end_time": 452.064,
+          "duration": 10.321
+        },
+        {
+          "sentence_index": 9,
+          "text": "Third, the loop condition.",
+          "start_time": 452.064,
+          "end_time": 453.967,
+          "duration": 1.903
+        },
+        {
+          "sentence_index": 10,
+          "text": "Is it \"while left is less than right\" or \"while left is less than or equal to right\"?",
+          "start_time": 453.967,
+          "end_time": 460.19,
+          "duration": 6.222
+        },
+        {
+          "sentence_index": 11,
+          "text": "The choice depends on how you handle the boundaries.",
+          "start_time": 460.19,
+          "end_time": 463.996,
+          "duration": 3.806
+        },
+        {
+          "sentence_index": 12,
+          "text": "These details might seem pedantic, but they matter enormously.",
+          "start_time": 463.996,
+          "end_time": 468.535,
+          "duration": 4.539
+        },
+        {
+          "sentence_index": 13,
+          "text": "In fact, studies have shown that most programmers, even experienced ones, get binary search wrong on their first attempt.",
+          "start_time": 468.535,
+          "end_time": 477.392,
+          "duration": 8.857
+        },
+        {
+          "sentence_index": 14,
+          "text": "The lesson?",
+          "start_time": 477.392,
+          "end_time": 478.197,
+          "duration": 0.805
+        },
+        {
+          "sentence_index": 15,
+          "text": "Test carefully, think through edge cases, and trace through your logic step by step.",
+          "start_time": 478.197,
+          "end_time": 484.346,
+          "duration": 6.149
+        }
+      ]
+    },
+    {
+      "section": "BEYOND_SEARCHING",
+      "section_index": 6,
+      "start_time": 484.846,
+      "end_time": 544.168,
+      "duration": 59.322,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "text": "But here's what I find most fascinating about binary search.",
+          "start_time": 484.846,
+          "end_time": 489.038,
+          "duration": 4.192
+        },
+        {
+          "sentence_index": 1,
+          "text": "Its power extends far beyond just finding elements in a sorted list.",
+          "start_time": 489.038,
+          "end_time": 493.79,
+          "duration": 4.751
+        },
+        {
+          "sentence_index": 2,
+          "text": "The underlying principle—eliminating half of the possibilities with each step—appears throughout computer science and mathematics.",
+          "start_time": 493.79,
+          "end_time": 502.873,
+          "duration": 9.083
+        },
+        {
+          "sentence_index": 3,
+          "text": "It's the same idea behind bisection methods for finding roots of equations.",
+          "start_time": 502.873,
+          "end_time": 508.114,
+          "duration": 5.24
+        },
+        {
+          "sentence_index": 4,
+          "text": "It's how git bisect helps you find the exact commit that introduced a bug.",
+          "start_time": 508.114,
+          "end_time": 513.284,
+          "duration": 5.171
+        },
+        {
+          "sentence_index": 5,
+          "text": "It's used in optimization algorithms, in compression, in machine learning.",
+          "start_time": 513.284,
+          "end_time": 518.455,
+          "duration": 5.171
+        },
+        {
+          "sentence_index": 6,
+          "text": "Whenever you can frame a problem as a series of yes-or-no questions where each answer eliminates half the remaining options, you're tapping into this same logarithmic magic.",
+          "start_time": 518.455,
+          "end_time": 530.543,
+          "duration": 12.088
+        },
+        {
+          "sentence_index": 7,
+          "text": "Binary search isn't just an algorithm.",
+          "start_time": 530.543,
+          "end_time": 533.198,
+          "duration": 2.655
+        },
+        {
+          "sentence_index": 8,
+          "text": "It's a way of thinking—a reminder that the structure of information, when properly exploited, can transform the seemingly impossible into the trivially easy.",
+          "start_time": 533.198,
+          "end_time": 544.168,
+          "duration": 10.97
+        }
+      ]
+    },
+    {
+      "section": "CLOSING",
+      "section_index": 7,
+      "start_time": 544.668,
+      "end_time": 577.317,
+      "duration": 32.649,
+      "sentences": [
+        {
+          "sentence_index": 0,
+          "text": "So the next time you flip open a dictionary or scroll through a sorted list, remember: you're not just searching.",
+          "start_time": 544.668,
+          "end_time": 552.518,
+          "duration": 7.85
+        },
+        {
+          "sentence_index": 1,
+          "text": "You're wielding one of the most powerful ideas in computation—an idea that turns millions into twenty, that transforms linear slogs into logarithmic leaps.",
+          "start_time": 552.518,
+          "end_time": 563.285,
+          "duration": 10.767
+        },
+        {
+          "sentence_index": 2,
+          "text": "And that, in the end, is why binary search matters.",
+          "start_time": 563.285,
+          "end_time": 566.828,
+          "duration": 3.543
+        },
+        {
+          "sentence_index": 3,
+          "text": "Not because it's fast—though it certainly is.",
+          "start_time": 566.828,
+          "end_time": 569.954,
+          "duration": 3.126
+        },
+        {
+          "sentence_index": 4,
+          "text": "But because it shows us what becomes possible when we think carefully about the structure of our problems.",
+          "start_time": 569.954,
+          "end_time": 577.317,
+          "duration": 7.363
+        }
+      ]
+    }
+  ]
+}
